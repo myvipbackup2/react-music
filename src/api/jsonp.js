@@ -1,29 +1,27 @@
 import originJsonp from "jsonp"
+import queryString from 'query-string'
 
-let jsonp = (url, data, option) => {
-  return new Promise((resolve, reject) => {
-    originJsonp(buildUrl(url, data), option, (err, data) => {
-      if (!err) {
-        resolve(data);
-      } else {
-        reject(err);
-      }
+const jsonp = (url, data, option) => {
+  try {
+    return new Promise((resolve, reject) => {
+      originJsonp(buildUrl(url, data), option, (err, data) => {
+        if (!err) {
+          resolve(data);
+        } else {
+          reject(err);
+        }
+      });
     });
-  });
+  } catch (e) {
+    console.warn(e)
+  }
 };
 
 function buildUrl(url, data) {
-  let params = [];
-  for (var k in data) {
-    params.push(`${k}=${data[k]}`);
+  if (!data) {
+    return url
   }
-  let param = params.join("&");
-  if (url.indexOf("?") === -1) {
-    url += "?" + param;
-  } else {
-    url += "&" + param;
-  }
-  return url;
+  return url + '?' + queryString.stringify(data);
 }
 
 export default jsonp

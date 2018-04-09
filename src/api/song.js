@@ -2,7 +2,8 @@ import jsonp from "./jsonp"
 import { URL, PARAM } from "./config"
 
 export function getSongVKey(songMid) {
-  const data = Object.assign({}, PARAM, {
+  const data = {
+    ...PARAM,
     g_tk: 1278911659,
     hostUin: 0,
     platform: "yqq",
@@ -12,7 +13,7 @@ export function getSongVKey(songMid) {
     songmid: songMid,
     filename: `C400${songMid}.m4a`,
     guid: 3655047200
-  });
+  };
   const option = {
     param: "callback",
     prefix: "callback"
