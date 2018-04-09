@@ -8,6 +8,7 @@ import Album from "@/containers/Album"
 import Scroll from "@/common/scroll/Scroll"
 import Loading from "@/common/loading/Loading"
 import * as AlbumModel from "@/model/album"
+import toHttps from '@/util/toHttps'
 
 import "./recommend.styl"
 import "swiper/dist/css/swiper.css"
@@ -22,34 +23,36 @@ class Recommend extends React.Component {
     refreshScroll: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+
     //如果当前路由没有被激活隐藏加载组件
     if (!this.props.match.isExact) {
       this.setState({
         loading: false,
       });
     }
-    getCarousel().then((res) => {
-      //console.log("获取轮播：");
-      if (res) {
-        //console.log(res);
-        if (res.code === CODE_SUCCESS) {
-          this.setState({
-            sliderList: res.data.slider
-          }, () => {
-            if (!this.sliderSwiper) {
-              //初始化轮播图
-              this.sliderSwiper = new Swiper(".slider-container", {
-                loop: true,
-                autoplay: 3000,
-                autoplayDisableOnInteraction: false,
-                pagination: '.swiper-pagination',
-              });
-            }
-          });
-        }
+
+    const res = await getCarousel();
+
+    if (res) {
+      //console.log(res);
+      if (res.code === CODE_SUCCESS) {
+        this.setState({
+          sliderList: res.data.slider
+        }, () => {
+          if (!this.sliderSwiper) {
+            //初始化轮播图
+            this.sliderSwiper = new Swiper(".slider-container", {
+              loop: true,
+              autoplay: 3000,
+              autoplayDisableOnInteraction: false,
+              pagination: '.swiper-pagination',
+            });
+          }
+        });
       }
-    });
+    }
+
 
     getNewAlbum().then((res) => {
       //console.log("获取最新专辑：");
@@ -138,8 +141,8 @@ class Recommend extends React.Component {
                   this.state.sliderList.map(slider => {
                     return (
                       <div className="swiper-slide" key={slider.id}>
-                        <a className="slider-nav" onClick={this.toLink(slider.linkUrl)}>
-                          <img src={slider.picUrl} width="100%" height="100%" alt="推荐" />
+                        <a className="slider-nav" onClick={this.toLink(toHttps(slider.linkUrl))}>
+                          <img src={toHttps(slider.picUrl)} width="100%" height="100%" alt="推荐" />
                         </a>
                       </div>
                     );
@@ -148,12 +151,16 @@ class Recommend extends React.Component {
               </div>
               <div className="swiper-pagination" />
             </div>
-            <div className="album-container" style={this.state.loading ? { display: "none" } : null}>
-              <h1 className="title skin-recommend-title">最新专辑</h1>
-              <div className="album-list">
-                {albums}
-              </div>
-            </div>
+            {
+              !this.state.loading && (
+                <div className="album-container">
+                  <h1 className="title skin-recommend-title">最新专辑</h1>
+                  <div className="album-list">
+                    {albums}
+                  </div>
+                </div>
+              )
+            }
           </div>
         </Scroll>
         <Loading title="正在加载..." show={this.state.loading} />
