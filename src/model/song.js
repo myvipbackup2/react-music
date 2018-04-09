@@ -21,7 +21,7 @@ export function createSong(data) {
 		data.songid,
 		data.songmid,
 		data.songname,
-		`http://y.gtimg.cn/music/photo_new/T002R300x300M000${data.albummid}.jpg?max_age=2592000`,
+		`https://y.gtimg.cn/music/photo_new/T002R300x300M000${data.albummid}.jpg?max_age=2592000`,
 		data.interval,
 		"",
 		filterSinger(data.singer)

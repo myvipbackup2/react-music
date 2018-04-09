@@ -68,7 +68,7 @@ class RankingInfo extends React.Component {
 				if(res.code === CODE_SUCCESS) {
 					if(res.data.items) {
 						let item = res.data.items[0];
-						song.url =  `http://dl.stream.qqmusic.qq.com/${item.filename}?vkey=${item.vkey}&guid=3655047200&fromtag=66`
+						song.url =  `https://dl.stream.qqmusic.qq.com/${item.filename}?vkey=${item.vkey}&guid=3655047200&fromtag=66`
 					}
 				}
 			}

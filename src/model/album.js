@@ -20,7 +20,7 @@ export function createAlbumByList(data) {
 		data.album_id,
 		data.album_mid,
 		data.album_name,
-		`http://y.gtimg.cn/music/photo_new/T002R300x300M000${data.album_mid}.jpg?max_age=2592000`,
+		`https://y.gtimg.cn/music/photo_new/T002R300x300M000${data.album_mid}.jpg?max_age=2592000`,
 		filterSinger(data.singers),
 		data.public_time
 	);
@@ -34,7 +34,7 @@ export function createAlbumByDetail(data) {
 		data.id,
 		data.mid,
 		data.name,
-		`http://y.gtimg.cn/music/photo_new/T002R300x300M000${data.mid}.jpg?max_age=2592000`,
+		`https://y.gtimg.cn/music/photo_new/T002R300x300M000${data.mid}.jpg?max_age=2592000`,
 		data.singername,
 		data.aDate
 	);
@@ -48,7 +48,7 @@ export function createAlbumBySearch(data) {
 		data.albumid,
 		data.albummid,
 		data.albumname,
-		`http://y.gtimg.cn/music/photo_new/T002R68x68M000${data.albummid}.jpg?max_age=2592000`,
+		`https://y.gtimg.cn/music/photo_new/T002R68x68M000${data.albummid}.jpg?max_age=2592000`,
 		data.singername,
 		""
 	);
