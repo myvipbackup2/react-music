@@ -46,13 +46,13 @@ class Search extends React.Component {
       this.search(k);
     }
   };
-  handleInput = (e) => {
-    let w = e.currentTarget.value;
+  handleInput = (currentTarget) => {
+    const w = currentTarget.value;
     this.setState({
       w,
       singer: {},
       album: {},
-      songs: []
+      songs: [],
     });
   };
 
