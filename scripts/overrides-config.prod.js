@@ -11,10 +11,10 @@ const shouldUseRelativeAssetPaths = publicPath === './';
 const cssFilename = 'static/css/[name].[contenthash:8].css';
 const extractTextPluginOptions = shouldUseRelativeAssetPaths
   ? // Making sure that the publicPath goes back to to build folder.
-    { publicPath: Array(cssFilename.split('/').length).join('../') }
+  { publicPath: Array(cssFilename.split('/').length).join('../') }
   : {};
 
-module.exports = function(config) {
+module.exports = function (config) {
   // Define the root path alias
   let alias = config.resolve.alias;
   alias["@"] = baseConfig.rootPath;
@@ -32,19 +32,19 @@ module.exports = function(config) {
       Object.assign(
         {
           fallback: {
-              loader: require.resolve('style-loader'),
-              options: {
-                hmr: false
-              }
+            loader: require.resolve('style-loader'),
+            options: {
+              hmr: false
+            }
           },
           use: [
             {
               loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
-                  minimize: true,
-                  sourceMap: true
-                }
+              options: {
+                importLoaders: 1,
+                minimize: true,
+                sourceMap: true
+              }
             },
             {
               loader: require.resolve('stylus-loader')
@@ -55,4 +55,4 @@ module.exports = function(config) {
   });
   // Use Poststylus Plugin to handle stylus
   config.plugins.push(baseConfig.stylusLoaderOptionsPlugin);
-}
+};
