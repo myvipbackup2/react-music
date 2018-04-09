@@ -52,17 +52,23 @@ class Recommend extends React.Component {
           sliderList: res.data.slider
         }, () => {
           if (!this.sliderSwiper) {
-            //初始化轮播图
-            this.sliderSwiper = new Swiper(".slider-container", {
-              loop: true,
-              autoplay: 3000,
-              autoplayDisableOnInteraction: false,
-              pagination: '.swiper-pagination',
-            });
+            this.initSwiper();
           }
         });
       }
     }
+  };
+
+  /**
+   * 初始化轮播图
+   */
+  initSwiper = () => {
+    this.sliderSwiper = new Swiper(".slider-container", {
+      loop: true,
+      autoplay: 3000,
+      autoplayDisableOnInteraction: false,
+      pagination: '.swiper-pagination',
+    });
   };
 
   /**

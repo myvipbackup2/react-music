@@ -41,9 +41,9 @@ skin.mangoYellow = {
 skin.coolBlack = {
   appColor: "#DDDDDD",
   appBgColor: "#212121",
-  appHeaderColor: "#FFD700",
+  appHeaderColor: "#ffcd32",
   appHeaderBgColor: "transparent",
-  tabColor: "#DDDDDD",
+  tabColor: "rgba(255,255,255,0.5)",
   tabBgColor: "transparent",
   albumColor: "rgba(221, 221, 221, 0.7)",
   albumNameColor: "#FFFFFF",
@@ -52,7 +52,7 @@ skin.coolBlack = {
   searchBgColor: "#212121",
   searchBoxBgColor: "#333333",
   searchBoxWrapperBgColor: "#212121",
-  searchTitleColor: "#FFD700",
+  searchTitleColor: "#ffcd32",
   searchHotColor: "#DDDDDD",
   searchHotBorderColor: "transparent",
   searchResultBorderColor: "transparent",
@@ -62,9 +62,9 @@ skin.coolBlack = {
   miniPlayerBgColor: "#333333",
   miniImgBorderColor: "rgba(221, 221, 221, 0.3)",
   miniProgressBarBgColor: "rgba(0, 0, 0, 0.3)",
-  miniRightColor: "#FFD700",
+  miniRightColor: "#ffcd32",
   miniSongColor: "#FFFFFF",
-  activeColor: "#FFD700"
+  activeColor: "#ffcd32"
 };
 
 skin.kuGouBlue = Object.assign({}, skin.mangoYellow, {
@@ -189,7 +189,7 @@ let getSkinStyle = (skin) => {
     .music-album, .ranking-info, .music-singer {
       background-color: ${skin.detailBgColor};
     }
-    .nav-link.active {
+    .nav-link.active span {
       color: ${skin.activeColor} !important;
       border-bottom: 2px solid ${skin.activeColor};
     }

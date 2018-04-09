@@ -1,11 +1,10 @@
 .app
   width: 100%
-  height: 100%
-  /*color: #DDDDDD
+  height: 100% /*color: #DDDDDD
   background-color: #212121*/
   .app-header
-    height: 55px
-    line-height: 55px
+    height: 50px
+    line-height: 50px
     text-align: center
     position: relative
     .app-more
@@ -20,20 +19,20 @@
       vertical-align: middle
     .app-title
       display: inline-block
-      height: 55px
+      height: 50px
       margin-left: 10px
       font-size: 18px
       font-weight: 300
   .music-tab
     display: flex
-    line-height: 30px
+    height: 40px
+    line-height: 40px
     text-align: center
-    /*color: #DDDDDD*/
     .tab-item
       flex: 1
   .music-view
     position: fixed
-    top: 87px
+    top: 90px
     left: 0
     bottom: 52px
     width: 100%
@@ -42,9 +41,11 @@
   display: block
   color: inherit
   text-decoration: none
-  /*&.active
-      color: #FFD700
-      border-bottom: 2px solid #FFD700*/
+
+.nav-link
+  span
+    font-size: 14px
+    padding-bottom: 4px
 
 /*子路由动画*/
 .translate-enter
@@ -52,8 +53,8 @@
   &.translate-enter-active
     transition: transform .3s
     transform: translate3d(0, 0, 0)
-    
-/*音符样式*/    
+
+/*音符样式*/
 .music-ico
   position: fixed
   z-index: 1000
