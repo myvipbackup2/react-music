@@ -20,11 +20,11 @@ class Scroll extends React.Component {
         scrollY: this.props.direction === "vertical",
         // 实时派发scroll事件
         probeType: 3,
-        click: this.props.click
+        click: this.props.click,
       });
 
       if (this.props.onScroll) {
-        this.bScroll.on("scroll", (scroll) => {
+        this.bScroll.on("scroll", scroll => {
           this.props.onScroll(scroll);
         });
       }

@@ -25,15 +25,26 @@ class Recommend extends React.Component {
 
   async componentDidMount() {
 
-    //如果当前路由没有被激活隐藏加载组件
+    // 如果当前路由没有被激活隐藏加载组件
     if (!this.props.match.isExact) {
       this.setState({
         loading: false,
       });
     }
 
-    const res = await getCarousel();
+    // 并发的网路请求
+    await Promise.all([
+      this.updateCarousel(),
+      this.updateAlbum(),
+    ])
 
+  }
+
+  /**
+   * 更新轮播图
+   */
+  updateCarousel = async () => {
+    const res = await getCarousel();
     if (res) {
       //console.log(res);
       if (res.code === CODE_SUCCESS) {
@@ -52,32 +63,29 @@ class Recommend extends React.Component {
         });
       }
     }
+  };
 
-
-    getNewAlbum().then((res) => {
-      //console.log("获取最新专辑：");
-      if (res) {
-        //console.log(res);
-        if (res.code === CODE_SUCCESS) {
-          //根据发布时间降序排列
-          let albumList = res.albumlib.data.list;
-          albumList.sort((a, b) => {
-            return new Date(b.public_time).getTime() - new Date(a.public_time).getTime();
-          });
+  /**
+   * 更新专辑
+   */
+  updateAlbum = async () => {
+    const res = await getNewAlbum();
+    if (res) {
+      if (res.code === CODE_SUCCESS) {
+        const { albumlib = {} } = res;
+        const { list = [] } = albumlib.data;
+        this.setState({
+          loading: false,
+          newAlbums: list,
+        }, () => {
+          // 刷新scroll
           this.setState({
-            loading: false,
-            newAlbums: albumList
-          }, () => {
-            //刷新scroll
-            this.setState({
-              refreshScroll: true,
-            });
+            refreshScroll: true,
           });
-        }
+        });
       }
-    });
-
-  }
+    }
+  };
 
   toLink(linkUrl) {
     /* 使用闭包把参数变为局部变量使用 */
@@ -86,14 +94,25 @@ class Recommend extends React.Component {
     };
   }
 
-  toAlbumDetail(url) {
+  /**
+   * 专辑详情页
+   */
+  toAlbumDetail = (url) => {
     /* scroll组件会派发一个点击事件，不能使用链接跳转 */
-    return () => {
-      this.props.history.push({
-        pathname: url,
-      });
-    }
-  }
+    this.props.history.push({
+      pathname: url,
+    });
+  };
+
+  /**
+   * 由于使用了Better-scroll
+   * better-scroll是基于css3的transform实现的
+   * react-lazylaod库监听的是浏览器原生的scroll和resize事件
+   * react-lazyload不能监听scroll事件要强制触发
+   */
+  handleForceCheck = () => {
+    forceCheck();
+  };
 
   render() {
     const { match } = this.props;
@@ -104,7 +123,7 @@ class Recommend extends React.Component {
         <div
           className="album-wrapper skin-album-wrapper"
           key={album.mId}
-          onClick={this.toAlbumDetail(`${match.url + '/' + album.mId}`)}
+          onClick={() => this.toAlbumDetail(`${match.url + '/' + album.mId}`)}
         >
           <div className="left">
             <LazyLoad height={60}>
@@ -129,10 +148,7 @@ class Recommend extends React.Component {
       <div className="music-recommend">
         <Scroll
           refresh={this.state.refreshScroll}
-          onScroll={() => {
-            /* 检查懒加载组件是否出现在视图中，如果出现就加载组件 */
-            forceCheck();
-          }}
+          onScroll={this.handleForceCheck}
         >
           <div>
             <div className="slider-container">
@@ -164,7 +180,7 @@ class Recommend extends React.Component {
           </div>
         </Scroll>
         <Loading title="正在加载..." show={this.state.loading} />
-        <Route path={`${match.url + '/:id'}`} component={Album} />
+        <Route path={`${match.url}/:id`} component={Album} />
       </div>
     );
   }
