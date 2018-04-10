@@ -11,6 +11,7 @@ import { CODE_SUCCESS } from "@/api/config"
 import * as SingerModel from "@/model/singer"
 import * as AlbumModel from "@/model/album"
 import * as SongModel from "@/model/song"
+import debounce from '@/util/debounce'
 
 import "./search.styl"
 
@@ -29,11 +30,16 @@ class Search extends React.Component {
   musicIco1 = null;
   musicIco2 = null;
   musicIco3 = null;
+  scroll = null;
 
   componentDidMount() {
     this.updateHotKey();
     this.initMusicIco();
   }
+
+  getScrollRef = ref => {
+    this.scroll = ref
+  };
 
   /**
    * 获取热门搜索词
@@ -57,6 +63,7 @@ class Search extends React.Component {
       album: {},
       songs: [],
     });
+    this.autoSearch(w);
   };
 
   handleClick = (data, type) => {
@@ -96,6 +103,10 @@ class Search extends React.Component {
     }
   };
 
+  autoSearch = debounce(w => {
+    this.search(w)
+  }, 300);
+
   search = (w) => {
     this.setState({
       w,
@@ -104,10 +115,10 @@ class Search extends React.Component {
     search(w).then((res) => {
       //console.log("搜索：");
       if (res) {
-        //console.log(res);
-        if (res.code === CODE_SUCCESS) {
-          let zhida = res.data.zhida;
-          let type = zhida.type;
+        const { code, data = {} } = res;
+        if (code === CODE_SUCCESS) {
+          const { zhida } = data;
+          const { type } = zhida;
           let singer = {};
           let album = {};
           switch (type) {
@@ -127,9 +138,8 @@ class Search extends React.Component {
             default:
               break;
           }
-
           let songs = [];
-          res.data.song.list.forEach((data) => {
+          data.song.list.forEach((data) => {
             if (data.pay.payplay === 1) {
               return
             }
@@ -141,7 +151,7 @@ class Search extends React.Component {
             songs: songs,
             loading: false
           }, () => {
-            this.refs.scroll.refresh();
+            this.scroll.refresh();
           });
         }
       }
@@ -263,7 +273,7 @@ class Search extends React.Component {
           </div>
         </div>
         <div className="search-result skin-search-result" style={{ display: this.state.w ? "block" : "none" }}>
-          <Scroll ref="scroll">
+          <Scroll ref={this.getScrollRef}>
             <div>
               {/* 专辑 */}
               <div className="album-wrapper" style={{ display: album.id ? "block" : "none" }}

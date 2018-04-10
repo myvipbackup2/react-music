@@ -71,7 +71,6 @@ class RankingInfo extends React.Component {
   };
 
   componentDidMount() {
-
     const { match } = this.props;
     this.computeContainerTop();
     this.updateRankingInfo(match.params.id);
