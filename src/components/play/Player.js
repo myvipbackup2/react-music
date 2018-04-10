@@ -282,7 +282,7 @@ class Player extends React.Component {
     }
 
     const song = this.currentSong;
-    const playBg = song.img ? song.img : require("@/assets/imgs/play_bg.jpg");
+    const playBg = song.img ? toHttps(song.img) : require("@/assets/imgs/play_bg.jpg");
 
     // 播放按钮样式
     const playButtonClass = this.state.playStatus ? "icon-pause" : "icon-play";
@@ -322,7 +322,7 @@ class Player extends React.Component {
                   alt={song.name}
                   onLoad={() => {
                     /* 图片加载完成后设置背景，防止图片加载过慢导致没有背景 */
-                    this.playerBgDOM.style.backgroundImage = `url("${toHttps(playBg)}")`;
+                    this.playerBgDOM.style.backgroundImage = `url("${playBg}")`;
                   }}
                 />
               </div>

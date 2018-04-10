@@ -1,17 +1,17 @@
-import React from "react"
-import { BrowserRouter as Router, Route, Switch, Redirect, NavLink } from "react-router-dom"
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch, Redirect, NavLink } from 'react-router-dom'
 
-import Recommend from "./recommend/Recommend"
-import Ranking from "./ranking/Ranking"
-import SingerList from "./singer/SingerList"
-import Search from "../containers/Search"
-import MusicPlayer from "./play/MusicPlayer"
-import MusicMenu from "./setting/Menu"
+import Recommend from './recommend/Recommend'
+import Ranking from './ranking/Ranking'
+import SingerList from './singer/SingerList'
+import Search from '../containers/Search'
+import MusicPlayer from './play/MusicPlayer'
+import MusicMenu from './setting/Menu'
 
-import logo from "../assets/imgs/logo.png"
-import "../assets/stylus/reset.styl"
-import "../assets/stylus/font.styl"
-import "./App.styl"
+import logo from '../assets/imgs/logo.png'
+import '../assets/stylus/reset.styl'
+import '../assets/stylus/font.styl'
+import './App.styl'
 
 class App extends React.Component {
 
