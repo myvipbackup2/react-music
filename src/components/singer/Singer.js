@@ -1,5 +1,4 @@
 import React from "react"
-import ReactDOM from "react-dom"
 import { CSSTransition } from "react-transition-group"
 import { getTransitionEndName } from "@/util/event"
 import Header from "@/common/header/Header"
@@ -23,6 +22,11 @@ class Singer extends React.Component {
     songs: [],
     refreshScroll: false,
   };
+
+  musicIcons = [];
+  musicIco1 = null;
+  musicIco2 = null;
+  musicIco3 = null;
 
   componentDidMount() {
     const { id } = this.props.match.params;
@@ -100,12 +104,12 @@ class Singer extends React.Component {
    */
   initMusicIco() {
 
-    this.musicIcos = [];
-    this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco1));
-    this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco2));
-    this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco3));
+    this.musicIcons = [];
+    this.musicIcons.push(this.musicIco1);
+    this.musicIcons.push(this.musicIco2);
+    this.musicIcons.push(this.musicIco3);
 
-    this.musicIcos.forEach((item) => {
+    this.musicIcons.forEach((item) => {
       //初始化状态
       item.run = false;
       let transitionEndName = getTransitionEndName(item);
@@ -125,9 +129,9 @@ class Singer extends React.Component {
    * 开始音符下落动画
    */
   startMusicIcoAnimation({ clientX, clientY }) {
-    if (this.musicIcos.length > 0) {
-      for (let i = 0; i < this.musicIcos.length; i++) {
-        let item = this.musicIcos[i];
+    if (this.musicIcons.length > 0) {
+      for (let i = 0; i < this.musicIcons.length; i++) {
+        let item = this.musicIcons[i];
         //选择一个未在动画中的元素开始动画
         if (item.run === false) {
           item.style.top = clientY + "px";
@@ -146,6 +150,18 @@ class Singer extends React.Component {
       }
     }
   }
+
+  getMusicIco1 = ref => {
+    this.musicIco1 = ref
+  };
+
+  getMusicIco2 = ref => {
+    this.musicIco2 = ref
+  };
+
+  getMusicIco3 = ref => {
+    this.musicIco3 = ref
+  };
 
   /**
    * 选择歌曲
@@ -178,7 +194,7 @@ class Singer extends React.Component {
     let albumFixedBgDOM = this.albumFixedBg;
     let playButtonWrapperDOM = this.playButtonWrapper;
     if (y < 0) {
-      if (Math.abs(y) + 55 > albumBgDOM.offsetHeight) {
+      if (Math.abs(y) + 45 > albumBgDOM.offsetHeight) {
         albumFixedBgDOM.style.display = "block";
       } else {
         albumFixedBgDOM.style.display = "none";
@@ -249,13 +265,13 @@ class Singer extends React.Component {
             </div>
             <Loading title="正在加载..." show={this.state.loading} />
           </div>
-          <div className="music-ico" ref="musicIco1">
+          <div className="music-ico" ref={this.getMusicIco1}>
             <div className="icon-fe-music" />
           </div>
-          <div className="music-ico" ref="musicIco2">
+          <div className="music-ico" ref={this.getMusicIco2}>
             <div className="icon-fe-music" />
           </div>
-          <div className="music-ico" ref="musicIco3">
+          <div className="music-ico" ref={this.getMusicIco3}>
             <div className="icon-fe-music" />
           </div>
         </div>

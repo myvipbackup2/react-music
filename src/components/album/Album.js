@@ -160,7 +160,7 @@ class Album extends React.Component {
     let albumFixedBgDOM = ReactDOM.findDOMNode(this.refs.albumFixedBg);
     let playButtonWrapperDOM = ReactDOM.findDOMNode(this.refs.playButtonWrapper);
     if (y < 0) {
-      if (Math.abs(y) + 55 > albumBgDOM.offsetHeight) {
+      if (Math.abs(y) + 45 > albumBgDOM.offsetHeight) {
         albumFixedBgDOM.style.display = "block";
       } else {
         albumFixedBgDOM.style.display = "none";
