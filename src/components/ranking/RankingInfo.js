@@ -61,52 +61,65 @@ class RankingInfo extends React.Component {
     this.musicIco3 = ref
   };
 
-  componentDidMount() {
-    this.setState({
-      show: true
-    });
+  /**
+   * 计算容器高度
+   */
+  computeContainerTop = () => {
     const rankingBgDOM = this.rankingBg;
     const rankingContainerDOM = this.rankingContainer;
     rankingContainerDOM.style.top = rankingBgDOM.offsetHeight + "px";
+  };
 
-    getRankingInfo(this.props.match.params.id).then((res) => {
-      //console.log("获取排行榜详情：");
-      if (res) {
-        //console.log(res);
-        if (res.code === CODE_SUCCESS) {
-          let ranking = RankingModel.createRankingByDetail(res.topinfo);
-          ranking.info = res.topinfo.info;
-          let songList = [];
-          res.songlist.forEach(item => {
-            if (item.data.pay.payplay === 1) {
-              return
-            }
-            let song = SongModel.createSong(item.data);
-            //获取歌曲vkey
-            this.getSongUrl(song, item.data.songmid);
-            songList.push(song);
-          });
+  componentDidMount() {
 
-          this.setState({
-            loading: false,
-            ranking: ranking,
-            songs: songList
-          }, () => {
-            //刷新scroll
-            this.setState({ refreshScroll: true });
-          });
-        }
-      }
-    });
+    const { match } = this.props;
+    this.computeContainerTop();
+    this.updateRankingInfo(match.params.id);
     this.initMusicIco();
   }
 
-  getSongUrl(song, mId) {
-    getSongVKey(mId).then((res) => {
+  updateRankingInfo = async (id) => {
+    this.setState({
+      show: true
+    });
+    const res = await getRankingInfo(id);
+    if (res) {
+      const { code, topinfo = {}, songlist = [] } = res;
+      if (code === CODE_SUCCESS) {
+        const ranking = RankingModel.createRankingByDetail(topinfo);
+        ranking.info = topinfo.info;
+        const songList = [];
+        songlist.forEach(({ data }) => {
+          if (data.pay.payplay === 1) {
+            return
+          }
+          const song = SongModel.createSong(data);
+          //获取歌曲vkey
+          this.getSongUrl(song);
+          songList.push(song);
+        });
+        this.setState({
+          loading: false,
+          ranking: ranking,
+          songs: songList,
+        }, () => {
+          //刷新scroll
+          this.setState({
+            refreshScroll: true,
+          });
+        });
+      }
+    }
+  };
+
+  getSongUrl(song) {
+    getSongVKey(song.mId).then((res) => {
       if (res) {
-        if (res.code === CODE_SUCCESS) {
-          if (res.data.items) {
-            let item = res.data.items[0];
+        const { code, data } = res;
+        if (code === CODE_SUCCESS) {
+          const { items = [] } = data;
+          if (items.length) {
+            const [item] = items;
             song.url = `https://dl.stream.qqmusic.qq.com/${item.filename}?vkey=${item.vkey}&guid=3655047200&fromtag=66`
           }
         }
