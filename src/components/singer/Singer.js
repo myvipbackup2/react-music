@@ -25,53 +25,20 @@ class Singer extends React.Component {
   };
 
   componentDidMount() {
-
-    this.setState({
-      show: true,
-    });
-    const albumBgDOM = this.albumBg;
-    const albumContainerDOM = this.albumContainer;
-    albumContainerDOM.style.top = albumBgDOM.offsetHeight + "px";
-
-    getSingerInfo(this.props.match.params.id).then((res) => {
-      //console.log("获取歌手详情：");
-      if (res) {
-        //console.log(res);
-        if (res.code === CODE_SUCCESS) {
-          let singer = SingerModel.createSingerByDetail(res.data);
-          singer.desc = res.data.desc;
-
-          let songList = res.data.list;
-          let songs = [];
-          songList.forEach(item => {
-            if (item.musicData.pay.payplay === 1) {
-              return
-            }
-            let song = SongModel.createSong(item.musicData);
-            //获取歌曲vkey
-            this.getSongUrl(song, song.mId);
-            songs.push(song);
-          });
-          this.setState({
-            loading: false,
-            singer: singer,
-            songs: songs
-          }, () => {
-            //刷新scroll
-            this.setState({ refreshScroll: true });
-          });
-        }
-      }
-    });
+    const { id } = this.props.match.params;
+    this.computeContainerTop();
+    this.updateSingerInfo(id);
     this.initMusicIco();
   }
 
   getSongUrl(song, mId) {
     getSongVKey(mId).then((res) => {
       if (res) {
-        if (res.code === CODE_SUCCESS) {
-          if (res.data.items) {
-            let item = res.data.items[0];
+        const { code, data = {} } = res;
+        if (code === CODE_SUCCESS) {
+          const { items = [] } = data;
+          if (items.length) {
+            const [item] = items;
             song.url = `https://dl.stream.qqmusic.qq.com/${item.filename}?vkey=${item.vkey}&guid=3655047200&fromtag=66`
           }
         }
@@ -79,10 +46,50 @@ class Singer extends React.Component {
     });
   }
 
+  computeContainerTop = () => {
+    const albumBgDOM = this.albumBg;
+    const albumContainerDOM = this.albumContainer;
+    albumContainerDOM.style.top = albumBgDOM.offsetHeight + "px";
+  };
+
+  updateSingerInfo = async (singerId) => {
+    this.setState({
+      show: true,
+    });
+    const res = await getSingerInfo(singerId);
+    if (res) {
+      const { code, data = {} } = res;
+      if (code === CODE_SUCCESS) {
+        const singer = SingerModel.createSingerByDetail(data);
+        singer.desc = data.desc;
+        const { list: songList = [] } = data;
+        const songs = [];
+        songList.forEach(({ musicData }) => {
+          if (musicData.pay.payplay === 1) {
+            return
+          }
+          const song = SongModel.createSong(musicData);
+          // 获取歌曲vkey
+          this.getSongUrl(song, song.mId);
+          songs.push(song);
+        });
+        this.setState({
+          loading: false,
+          singer: singer,
+          songs: songs,
+        }, () => {
+          //刷新scroll
+          this.setState({ refreshScroll: true });
+        });
+      }
+    }
+  };
+
   /**
    * 初始化音符图标
    */
   initMusicIco() {
+
     this.musicIcos = [];
     this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco1));
     this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco2));
@@ -97,8 +104,7 @@ class Singer extends React.Component {
         this.style["webkitTransform"] = "translate3d(0, 0, 0)";
         this.style["transform"] = "translate3d(0, 0, 0)";
         this.run = false;
-
-        let icon = this.querySelector("div");
+        const icon = this.querySelector("div");
         icon.style["webkitTransform"] = "translate3d(0, 0, 0)";
         icon.style["transform"] = "translate3d(0, 0, 0)";
       }, false);
@@ -121,8 +127,7 @@ class Singer extends React.Component {
             item.run = true;
             item.style["webkitTransform"] = "translate3d(0, 1000px, 0)";
             item.style["transform"] = "translate3d(0, 1000px, 0)";
-
-            let icon = item.querySelector("div");
+            const icon = item.querySelector("div");
             icon.style["webkitTransform"] = "translate3d(-30px, 0, 0)";
             icon.style["transform"] = "translate3d(-30px, 0, 0)";
           }, 10);
