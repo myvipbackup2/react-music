@@ -1,5 +1,4 @@
 import React from "react"
-import ReactDOM from "react-dom"
 import { Route } from "react-router-dom"
 import { getTransitionEndName } from "@/util/event"
 import Scroll from "@/common/scroll/Scroll"
@@ -22,32 +21,36 @@ class Search extends React.Component {
     singer: {},
     album: {},
     songs: [],
-    w: "",
-    loading: false
+    w: '',
+    loading: false,
   };
 
+  musicIcons = [];
+  musicIco1 = null;
+  musicIco2 = null;
+  musicIco3 = null;
+
   componentDidMount() {
-    getHotKey().then((res) => {
-      //console.log("获取热搜：");
-      if (res) {
-        //console.log(res);
-        if (res.code === CODE_SUCCESS) {
-          this.setState({
-            hotKeys: res.data.hotkey
-          });
-        }
-      }
-    });
+    this.updateHotKey();
     this.initMusicIco();
   }
 
-  handleSearch = (k) => {
-    return () => {
-      this.search(k);
+  /**
+   * 获取热门搜索词
+   */
+  updateHotKey = async () => {
+    const res = await getHotKey();
+    if (res) {
+      if (res.code === CODE_SUCCESS) {
+        this.setState({
+          hotKeys: res.data.hotkey,
+        });
+      }
     }
   };
-  handleInput = (currentTarget) => {
-    const w = currentTarget.value;
+
+  handleInput = ({ target }) => {
+    const w = target.value;
     this.setState({
       w,
       singer: {},
@@ -92,8 +95,12 @@ class Search extends React.Component {
       }
     }
   };
+
   search = (w) => {
-    this.setState({ w, loading: true });
+    this.setState({
+      w,
+      loading: true,
+    });
     search(w).then((res) => {
       //console.log("搜索：");
       if (res) {
@@ -104,16 +111,16 @@ class Search extends React.Component {
           let singer = {};
           let album = {};
           switch (type) {
-            //0：表示歌曲
+            // 0：表示歌曲
             case 0:
               break;
-            //2：表示歌手
+            // 2：表示歌手
             case 2:
               singer = SingerModel.createSingerBySearch(zhida);
               singer.songnum = zhida.songnum;
               singer.albumnum = zhida.albumnum;
               break;
-            //3: 表示专辑
+            // 3: 表示专辑
             case 3:
               album = AlbumModel.createAlbumBySearch(zhida);
               break;
@@ -141,16 +148,28 @@ class Search extends React.Component {
     });
   };
 
+  getMusicIco1 = ref => {
+    this.musicIco1 = ref
+  };
+
+  getMusicIco2 = ref => {
+    this.musicIco2 = ref
+  };
+
+  getMusicIco3 = ref => {
+    this.musicIco3 = ref
+  };
+
   /**
    * 初始化音符图标
    */
   initMusicIco() {
-    this.musicIcos = [];
-    this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco1));
-    this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco2));
-    this.musicIcos.push(ReactDOM.findDOMNode(this.refs.musicIco3));
+    this.musicIcons = [];
+    this.musicIcons.push(this.musicIco1);
+    this.musicIcons.push(this.musicIco2);
+    this.musicIcons.push(this.musicIco3);
 
-    this.musicIcos.forEach((item) => {
+    this.musicIcons.forEach((item) => {
       //初始化状态
       item.run = false;
       let transitionEndName = getTransitionEndName(item);
@@ -171,9 +190,9 @@ class Search extends React.Component {
    * 开始音符下落动画
    */
   startMusicIcoAnimation({ clientX, clientY }) {
-    if (this.musicIcos.length > 0) {
-      for (let i = 0; i < this.musicIcos.length; i++) {
-        let item = this.musicIcos[i];
+    if (this.musicIcons.length > 0) {
+      for (let i = 0; i < this.musicIcons.length; i++) {
+        let item = this.musicIcons[i];
         //选择一个未在动画中的元素开始动画
         if (item.run === false) {
           item.style.top = clientY + "px";
@@ -202,16 +221,20 @@ class Search extends React.Component {
         <div className="search-box-wrapper skin-search-box-wrapper">
           <div className="search-box skin-search-box">
             <i className="icon-search" />
-            <input type="text" className="search-input" placeholder="搜索歌曲、歌手、专辑"
-                   value={this.state.w}
-                   onChange={this.handleInput}
-                   onKeyDown={
-                     (e) => {
-                       if (e.keyCode === 13) {
-                         this.search(e.currentTarget.value);
-                       }
-                     }
-                   } />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="搜索歌曲、歌手、专辑"
+              value={this.state.w}
+              onChange={this.handleInput}
+              onKeyDown={
+                (e) => {
+                  if (e.keyCode === 13) {
+                    this.search(e.currentTarget.value);
+                  }
+                }
+              }
+            />
           </div>
           <div className="cancel-button" style={{ display: this.state.w ? "block" : "none" }}
                onClick={() => this.setState({ w: "", singer: {}, album: {}, songs: [] })}>取消
@@ -222,10 +245,18 @@ class Search extends React.Component {
           <h1 className="title">热门搜索</h1>
           <div className="hot-list">
             {
-              this.state.hotKeys.map((hot, index) => {
-                if (index > 10) return "";
+              this.state.hotKeys.map(({ n, k }, index) => {
+                if (index > 14) {
+                  return null;
+                }
                 return (
-                  <div className="hot-item" key={index} onClick={this.handleSearch(hot.k)}>{hot.k}</div>
+                  <div
+                    className="hot-item"
+                    key={n + k}
+                    onClick={() => this.search(k)}
+                  >
+                    {k}
+                  </div>
                 );
               })
             }
@@ -234,7 +265,7 @@ class Search extends React.Component {
         <div className="search-result skin-search-result" style={{ display: this.state.w ? "block" : "none" }}>
           <Scroll ref="scroll">
             <div>
-              {/*专辑*/}
+              {/* 专辑 */}
               <div className="album-wrapper" style={{ display: album.id ? "block" : "none" }}
                    onClick={this.handleClick(album.mId, "album")}>
                 <div className="left">
@@ -245,7 +276,7 @@ class Search extends React.Component {
                   <div className="singer">{album.singer}</div>
                 </div>
               </div>
-              {/*歌手*/}
+              {/* 歌手 */}
               <div className="singer-wrapper" style={{ display: singer.id ? "block" : "none" }}
                    onClick={this.handleClick(singer.mId, "singer")}>
                 <div className="left">
@@ -256,13 +287,13 @@ class Search extends React.Component {
                   <div className="info">单曲{singer.songnum} 专辑{singer.albumnum}</div>
                 </div>
               </div>
-              {/*歌曲列表*/}
+              {/* 歌曲列表 */}
               {
                 this.state.songs.map((song) => {
                   return (
                     <div className="song-wrapper" key={song.id} onClick={this.handleClick(song, "song")}>
                       <div className="left">
-                        <i className="icon-fe-music"></i>
+                        <i className="icon-fe-music" />
                       </div>
                       <div className="right">
                         <div className="song">{song.name}</div>
@@ -276,17 +307,17 @@ class Search extends React.Component {
             <Loading title="正在加载..." show={this.state.loading} />
           </Scroll>
         </div>
-        <div className="music-ico" ref="musicIco1">
-          <div className="icon-fe-music"></div>
+        <div className="music-ico" ref={this.getMusicIco1}>
+          <div className="icon-fe-music" />
         </div>
-        <div className="music-ico" ref="musicIco2">
-          <div className="icon-fe-music"></div>
+        <div className="music-ico" ref={this.getMusicIco2}>
+          <div className="icon-fe-music" />
         </div>
-        <div className="music-ico" ref="musicIco3">
-          <div className="icon-fe-music"></div>
+        <div className="music-ico" ref={this.getMusicIco3}>
+          <div className="icon-fe-music" />
         </div>
-        <Route path={`${this.props.match.url + '/album/:id'}`} component={Album} />
-        <Route path={`${this.props.match.url + '/singer/:id'}`} component={Singer} />
+        <Route path={`${this.props.match.url}/album/:id`} component={Album} />
+        <Route path={`${this.props.match.url}/singer/:id`} component={Singer} />
       </div>
     );
   }

@@ -18,4 +18,4 @@ module.exports = function (config) {
   });
   // Use Poststylus Plugin to handle stylus
   config.plugins.push(baseConfig.stylusLoaderOptionsPlugin);
-}
+};
