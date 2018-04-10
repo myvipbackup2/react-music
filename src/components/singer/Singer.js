@@ -31,8 +31,12 @@ class Singer extends React.Component {
     this.initMusicIco();
   }
 
-  getSongUrl(song, mId) {
-    getSongVKey(mId).then((res) => {
+  /**
+   * 根据歌曲mId获取播放URL
+   * 获取播放链接也可以再点击播放的时候获取
+   */
+  getSongUrl(song) {
+    getSongVKey(song.mId).then((res) => {
       if (res) {
         const { code, data = {} } = res;
         if (code === CODE_SUCCESS) {
@@ -46,12 +50,18 @@ class Singer extends React.Component {
     });
   }
 
+  /**
+   * 计算容器高度
+   */
   computeContainerTop = () => {
     const albumBgDOM = this.albumBg;
     const albumContainerDOM = this.albumContainer;
     albumContainerDOM.style.top = albumBgDOM.offsetHeight + "px";
   };
 
+  /**
+   * 获取歌手信息
+   */
   updateSingerInfo = async (singerId) => {
     this.setState({
       show: true,
@@ -70,7 +80,7 @@ class Singer extends React.Component {
           }
           const song = SongModel.createSong(musicData);
           // 获取歌曲vkey
-          this.getSongUrl(song, song.mId);
+          this.getSongUrl(song);
           songs.push(song);
         });
         this.setState({
@@ -198,8 +208,8 @@ class Singer extends React.Component {
   };
 
   render() {
-    let singer = this.state.singer;
-    let songs = this.state.songs.map((song) => {
+    const { singer, show } = this.state;
+    const songs = this.state.songs.map(song => {
       return (
         <div className="song" key={song.id} onClick={this.selectSong(song)}>
           <div className="song-name">{song.name}</div>
@@ -209,7 +219,7 @@ class Singer extends React.Component {
     });
     const bgStyle = { backgroundImage: `url(${toHttps(singer.img)})` };
     return (
-      <CSSTransition in={this.state.show} timeout={300} classNames="translate">
+      <CSSTransition in={show} timeout={300} classNames="translate">
         <div className="music-singer">
           <Header title={singer.name} ref="header" />
           <div style={{ position: "relative" }}>
