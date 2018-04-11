@@ -125,7 +125,8 @@ class SingerList extends React.Component {
     }, () => {
       this.getSingers();
     });
-  }
+  };
+
   handleIndexClick = (key) => {
     this.setState({
       loading: true,
@@ -134,37 +135,52 @@ class SingerList extends React.Component {
     }, () => {
       this.getSingers();
     });
-  }
+  };
+
   toDetail = (url) => {
     this.props.history.push({
       pathname: url
     });
-  }
+  };
 
   render() {
-    let { match } = this.props;
-    let tags = this.types.map(type => (
-      <a key={type.key}
-         className={type.key === this.state.typeKey ? "choose" : ""}
-         onClick={() => {this.handleTypeClick(type.key);}}>
-        {type.name}</a>
+    const { match } = this.props;
+    const tags = this.types.map(({ key, name }) => (
+      <a
+        key={key}
+        className={key === this.state.typeKey ? "choose" : ""}
+        onClick={() => {this.handleTypeClick(key)}}
+      >
+        {name}
+      </a>
     ));
-    let indexs = this.indexs.map(type => (
-      <a key={type.key}
-         className={type.key === this.state.indexKey ? "choose" : ""}
-         onClick={() => {this.handleIndexClick(type.key);}}>
-        {type.name}</a>
+    let indexs = this.indexs.map(({ key, name }) => (
+      <a
+        key={key}
+        className={key === this.state.indexKey ? "choose" : ""}
+        onClick={() => {this.handleIndexClick(key);}}
+      >
+        {name}
+      </a>
     ));
     let singers = this.state.singers.map(singer => {
       return (
-        <div className="singer-wraper" key={singer.id}
-             onClick={() => {this.toDetail(`${match.url + '/' + singer.mId}`)}}>
+        <div
+          className="singer-wraper"
+          key={singer.id}
+          onClick={() => {this.toDetail(`${match.url}/${singer.mId}`)}}
+        >
           <div className="singer-img">
             <LazyLoad height={50}>
-              <img src={singer.img} width="100%" height="100%" alt={singer.name}
-                   onError={(e) => {
-                     e.currentTarget.src = require("@/assets/imgs/music.png");
-                   }} />
+              <img
+                src={singer.img}
+                width="100%"
+                height="100%"
+                alt={singer.name}
+                onError={({ currentTarget }) => {
+                  currentTarget.src = require("@/assets/imgs/music_holder.png");
+                }}
+              />
             </LazyLoad>
           </div>
           <div className="singer-name">
