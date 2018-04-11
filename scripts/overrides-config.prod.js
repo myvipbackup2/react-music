@@ -43,7 +43,7 @@ module.exports = function (config) {
               options: {
                 importLoaders: 1,
                 minimize: true,
-                sourceMap: true
+                sourceMap: false,
               }
             },
             {
