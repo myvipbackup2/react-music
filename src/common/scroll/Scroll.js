@@ -5,6 +5,8 @@ import "./scroll.styl"
 
 class Scroll extends React.Component {
 
+  scrollView = null;
+
   componentDidUpdate() {
     // 组件更新后，如果实例化了better-scroll并且需要刷新就调用refresh()函数
     if (this.bScroll && this.props.refresh) {
@@ -27,6 +29,15 @@ class Scroll extends React.Component {
         this.bScroll.on("scroll", scroll => {
           this.props.onScroll(scroll);
         });
+      }
+
+      if (this.props.scrollEnd) {
+        this.bScroll.on('scrollEnd', scroll => {
+          // 滚动到底部
+          if (this.bScroll.y <= (this.bScroll.maxScrollY + 50)) {
+            this.props.scrollEnd(scroll);
+          }
+        })
       }
 
     }

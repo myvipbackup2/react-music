@@ -3,6 +3,7 @@ import { Route } from "react-router-dom"
 import { getTransitionEndName } from "@/util/event"
 import Scroll from "@/common/scroll/Scroll"
 import Loading from "@/common/loading/Loading"
+import LoadingMore from "@/common/loading/LoadingMore"
 import Album from "@/containers/Album"
 import Singer from "@/containers/Singer"
 import { getHotKey, search } from "@/api/search"
@@ -23,7 +24,10 @@ class Search extends React.Component {
     album: {},
     songs: [],
     w: '',
+    p: 1,
+    totalnum: 0,
     loading: false,
+    loadingMore: false,
   };
 
   musicIcons = [];
@@ -33,6 +37,7 @@ class Search extends React.Component {
   scroll = null;
 
   componentDidMount() {
+    window._c = this;
     this.updateHotKey();
     this.initMusicIco();
   }
@@ -59,6 +64,8 @@ class Search extends React.Component {
     const w = target.value;
     this.setState({
       w,
+      p: 1,
+      totalnum: 0,
       singer: {},
       album: {},
       songs: [],
@@ -107,55 +114,92 @@ class Search extends React.Component {
     this.search(w)
   }, 300);
 
-  search = (w) => {
-    this.setState({
-      w,
-      loading: true,
-    });
-    search(w).then((res) => {
-      //console.log("搜索：");
-      if (res) {
-        const { code, data = {} } = res;
-        if (code === CODE_SUCCESS) {
-          const { zhida } = data;
-          const { type } = zhida;
-          let singer = {};
-          let album = {};
-          switch (type) {
-            // 0：表示歌曲
-            case 0:
-              break;
-            // 2：表示歌手
-            case 2:
-              singer = SingerModel.createSingerBySearch(zhida);
-              singer.songnum = zhida.songnum;
-              singer.albumnum = zhida.albumnum;
-              break;
-            // 3: 表示专辑
-            case 3:
-              album = AlbumModel.createAlbumBySearch(zhida);
-              break;
-            default:
-              break;
+  search = async (w, p = 1) => {
+    if (p <= 1) {
+      this.setState({
+        w,
+        loading: true,
+      });
+    } else {
+      this.setState({
+        p,
+        loadingMore: true,
+      })
+    }
+    const res = await search({ w, p });
+    if (res) {
+      const { code, data = {} } = res;
+      if (code === CODE_SUCCESS) {
+        const { zhida, song } = data;
+        const { type } = zhida;
+        let singer = {};
+        let album = {};
+        switch (type) {
+          // 0：表示歌曲
+          case 0:
+            break;
+          // 2：表示歌手
+          case 2:
+            singer = SingerModel.createSingerBySearch(zhida);
+            singer.songnum = zhida.songnum;
+            singer.albumnum = zhida.albumnum;
+            break;
+          // 3: 表示专辑
+          case 3:
+            album = AlbumModel.createAlbumBySearch(zhida);
+            break;
+          default:
+            break;
+        }
+        let songs = [];
+        song.list.forEach((data) => {
+          if (data.pay.payplay === 1) {
+            return
           }
-          let songs = [];
-          data.song.list.forEach((data) => {
-            if (data.pay.payplay === 1) {
-              return
-            }
-            songs.push(SongModel.createSong(data));
+          songs.push(SongModel.createSong(data));
+        });
+        if (p > 1) {
+          const { songs: oldSongs } = this.state;
+          this.setState({
+            songs: oldSongs.concat(songs),
+            totalnum: song.totalnum,
+            p: song.curpage,
+            loadingMore: false,
+          }, () => {
+            this.scroll.refresh();
           });
+        } else {
           this.setState({
             album: album,
             singer: singer,
             songs: songs,
-            loading: false
+            totalnum: song.totalnum,
+            p: song.curpage,
+            loading: false,
           }, () => {
             this.scroll.refresh();
           });
         }
       }
-    });
+    }
+  };
+
+  handleResetSearch = () => {
+    this.setState({
+      w: '',
+      p: 1,
+      totalnum: 0,
+      singer: {},
+      album: {},
+      songs: [],
+    })
+  };
+
+  loadingMore = () => {
+    const { p = 1, totalnum = 0, w } = this.state;
+    if (totalnum / 20 > p) {
+      this.search(w, p + 1)
+    }
   };
 
   getMusicIco1 = ref => {
@@ -238,18 +282,21 @@ class Search extends React.Component {
               value={this.state.w}
               onChange={this.handleInput}
               onKeyDown={
-                (e) => {
-                  if (e.keyCode === 13) {
-                    this.search(e.currentTarget.value);
+                ({ keyCode, currentTarget }) => {
+                  if (keyCode === 13) {
+                    this.search(currentTarget.value);
                   }
                 }
               }
             />
           </div>
-          <div className="cancel-button" style={{ display: this.state.w ? "block" : "none" }}
-               onClick={() => this.setState({ w: "", singer: {}, album: {}, songs: [] })}>取消
-          </div>
-
+          {
+            this.state.w && this.state.w.length && (
+              <div className="cancel-button" onClick={this.handleResetSearch}>
+                取消
+              </div>
+            )
+          }
         </div>
         <div className="search-hot" style={{ display: this.state.w ? "none" : "block" }}>
           <h1 className="title">热门搜索</h1>
@@ -273,7 +320,7 @@ class Search extends React.Component {
           </div>
         </div>
         <div className="search-result skin-search-result" style={{ display: this.state.w ? "block" : "none" }}>
-          <Scroll ref={this.getScrollRef}>
+          <Scroll ref={this.getScrollRef} scrollEnd={this.loadingMore}>
             <div>
               {/* 专辑 */}
               <div className="album-wrapper" style={{ display: album.id ? "block" : "none" }}
@@ -313,6 +360,7 @@ class Search extends React.Component {
                   );
                 })
               }
+              <LoadingMore show={this.state.loadingMore} />
             </div>
             <Loading title="正在加载..." show={this.state.loading} />
           </Scroll>

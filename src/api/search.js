@@ -13,7 +13,7 @@ export function getHotKey() {
   return jsonp(URL.hotkey, data, OPTION);
 }
 
-export function search(w) {
+export function search({ w, p = 1, n = 20 }) {
   const data = {
     ...PARAM,
     g_tk: 5381,
@@ -29,9 +29,9 @@ export function search(w) {
     sem: 1,
     aggr: 0,
     perpage: 20,
-    n: 20,
-    p: 1,
-    w: w,
+    n,
+    p, // 分页第几页
+    w, // 联想词
     remoteplace: "txt.mqq.all",
   };
   return jsonp(URL.search, data, OPTION);
