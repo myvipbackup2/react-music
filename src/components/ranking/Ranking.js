@@ -16,33 +16,35 @@ class Ranking extends React.Component {
   state = {
     loading: true,
     rankingList: [],
-    refreshScroll: false
+    refreshScroll: false,
   };
 
   componentDidMount() {
-    getRankingList().then((res) => {
-      //console.log("获取排行榜：");
-      if (res) {
-        //console.log(res);
-        if (res.code === CODE_SUCCESS) {
-          let topList = [];
-          res.data.topList.forEach(item => {
-            if (/MV/i.test(item.topTitle)) {
-              return;
-            }
-            topList.push(RankingModel.createRankingByList(item));
-          });
-          this.setState({
-            loading: false,
-            rankingList: topList
-          }, () => {
-            //刷新scroll
-            this.setState({ refreshScroll: true });
-          });
-        }
-      }
-    });
+    this.updateRankingList();
   }
+
+  updateRankingList = async () => {
+    const res = await getRankingList();
+    if (res) {
+      const { code, data } = res;
+      if (code === CODE_SUCCESS) {
+        const topList = [];
+        data.topList.forEach(({ topTitle = '' }) => {
+          if (/MV/i.test(topTitle)) {
+            return;
+          }
+          topList.push(RankingModel.createRankingByList(item));
+        });
+        this.setState({
+          loading: false,
+          rankingList: topList,
+        }, () => {
+          //刷新scroll
+          this.setState({ refreshScroll: true });
+        });
+      }
+    }
+  };
 
   toDetail = (url) => {
     this.props.history.push({
