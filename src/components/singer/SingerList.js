@@ -179,11 +179,11 @@ class SingerList extends React.Component {
           <div className="singer-img">
             <LazyLoad height={50}>
               <img
-                style={{ background: `url(${SINGER_HOLDER_IMG}) no-repeat center center` }}
                 src={singer.img}
                 width="100%"
                 height="100%"
                 alt={singer.name}
+                style={{ background: `url(${SINGER_HOLDER_IMG}) no-repeat center center` }}
                 onError={({ currentTarget }) => {
                   currentTarget.src = SINGER_HOLDER_IMG;
                 }}
