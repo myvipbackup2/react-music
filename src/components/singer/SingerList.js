@@ -178,7 +178,7 @@ class SingerList extends React.Component {
                 height="100%"
                 alt={singer.name}
                 onError={({ currentTarget }) => {
-                  currentTarget.src = require("@/assets/imgs/music_holder.png");
+                  currentTarget.src = '//y.gtimg.cn/mediastyle/global/img/singer_300.png?max_age=2592000';
                 }}
               />
             </LazyLoad>
