@@ -1,16 +1,14 @@
 import React from "react"
-import ReactDOM from "react-dom"
 import { Route } from "react-router-dom"
 import LazyLoad, { forceCheck } from "react-lazyload"
 import Scroll from "@/common/scroll/Scroll"
 import Loading from "@/common/loading/Loading"
 import Singer from "@/containers/Singer"
 import { getSingerList } from "@/api/singer"
-import { CODE_SUCCESS } from "@/api/config"
+import { CODE_SUCCESS, SINGER_HOLDER_IMG } from "@/api/config"
 import * as SingerModel from "@/model/singer"
 
 import "core-js/es6/array"
-
 import "./singerlist.styl"
 
 class SingerList extends React.Component {
@@ -74,17 +72,25 @@ class SingerList extends React.Component {
     this.getSingers();
   }
 
+  getTagRef = ref => {
+    this.tagRef = ref;
+  };
+
+  getIndexRef = ref => {
+    this.indexRef = ref;
+  };
+
   initNavScrollWidth() {
-    let tagDOM = ReactDOM.findDOMNode(this.refs.tag);
-    let tagElems = tagDOM.querySelectorAll("a");
+    const tagDOM = this.tagRef;
+    const tagElems = tagDOM.querySelectorAll("a");
     let tagTotalWidth = 0;
     Array.from(tagElems).forEach(a => {
       tagTotalWidth += a.offsetWidth;
     });
     tagDOM.style.width = `${tagTotalWidth}px`;
 
-    let indexDOM = ReactDOM.findDOMNode(this.refs.index);
-    let indexElems = indexDOM.querySelectorAll("a");
+    const indexDOM = this.indexRef;
+    const indexElems = indexDOM.querySelectorAll("a");
     let indexTotalWidth = 0;
     Array.from(indexElems).forEach(a => {
       indexTotalWidth += a.offsetWidth;
@@ -154,16 +160,16 @@ class SingerList extends React.Component {
         {name}
       </a>
     ));
-    let indexs = this.indexs.map(({ key, name }) => (
+    const indexs = this.indexs.map(({ key, name }) => (
       <a
         key={key}
         className={key === this.state.indexKey ? "choose" : ""}
-        onClick={() => {this.handleIndexClick(key);}}
+        onClick={() => {this.handleIndexClick(key)}}
       >
         {name}
       </a>
     ));
-    let singers = this.state.singers.map(singer => {
+    const singers = this.state.singers.map(singer => {
       return (
         <div
           className="singer-wraper"
@@ -173,12 +179,13 @@ class SingerList extends React.Component {
           <div className="singer-img">
             <LazyLoad height={50}>
               <img
+                style={{ background: `url(${SINGER_HOLDER_IMG}) no-repeat center center` }}
                 src={singer.img}
                 width="100%"
                 height="100%"
                 alt={singer.name}
                 onError={({ currentTarget }) => {
-                  currentTarget.src = '//y.gtimg.cn/mediastyle/global/img/singer_300.png?max_age=2592000';
+                  currentTarget.src = SINGER_HOLDER_IMG;
                 }}
               />
             </LazyLoad>
@@ -193,19 +200,21 @@ class SingerList extends React.Component {
       <div className="music-singers skin-music-singers">
         <div className="nav">
           <Scroll direction="horizontal">
-            <div className="tag" ref="tag">
+            <div className="tag" ref={this.getTagRef}>
               {tags}
             </div>
           </Scroll>
           <Scroll direction="horizontal">
-            <div className="index" ref="index">
+            <div className="index" ref={this.getIndexRef}>
               {indexs}
             </div>
           </Scroll>
         </div>
         <div className="singer-list">
-          <Scroll refresh={this.state.refreshScroll}
-                  onScroll={() => {forceCheck();}} ref="singerScroll">
+          <Scroll
+            refresh={this.state.refreshScroll}
+            onScroll={() => {forceCheck()}}
+          >
             <div className="singer-container">
               {singers}
             </div>

@@ -12,6 +12,7 @@ import * as AlbumModel from "@/model/album"
 import * as SongModel from "@/model/song"
 
 import "./album.styl"
+import toHttps from "../../util/toHttps";
 
 class Album extends React.Component {
   constructor(props) {
@@ -151,7 +152,8 @@ class Album extends React.Component {
       this.props.changeCurrentSong(this.state.songs[0]);
       this.props.showMusicPlayer(true);
     }
-  }
+  };
+
   /**
    * 监听scroll
    */
@@ -171,7 +173,7 @@ class Album extends React.Component {
       albumBgDOM.style["transform"] = transform;
       playButtonWrapperDOM.style.marginTop = `${y}px`;
     }
-  }
+  };
 
   render() {
     let album = this.state.album;
@@ -183,26 +185,27 @@ class Album extends React.Component {
         </div>
       );
     });
+    album.img = toHttps(album.img);
     return (
       <CSSTransition in={this.state.show} timeout={300} classNames="translate">
         <div className="music-album">
-          <Header title={album.name} ref="header"></Header>
+          <Header title={album.name} ref="header" />
           <div style={{ position: "relative" }}>
             <div ref="albumBg" className="album-img" style={{ backgroundImage: `url(${album.img})` }}>
-              <div className="filter"></div>
+              <div className="filter" />
             </div>
             <div ref="albumFixedBg" className="album-img fixed" style={{ backgroundImage: `url(${album.img})` }}>
-              <div className="filter"></div>
+              <div className="filter" />
             </div>
             <div className="play-wrapper" ref="playButtonWrapper">
               <div className="play-button" onClick={this.playAll}>
-                <i className="icon-play"></i>
+                <i className="icon-play" />
                 <span>播放全部</span>
               </div>
             </div>
           </div>
           <div ref="albumContainer" className="album-container">
-            <div className="album-scroll" style={this.state.loading === true ? { display: "none" } : {}}>
+            <div className="album-scroll" style={this.state.loading ? { display: "none" } : {}}>
               <Scroll refresh={this.state.refreshScroll} onScroll={this.scroll}>
                 <div className="album-wrapper skin-detail-wrapper">
                   <div className="song-count">专辑 共{songs.length}首</div>
@@ -221,13 +224,13 @@ class Album extends React.Component {
             <Loading title="正在加载..." show={this.state.loading} />
           </div>
           <div className="music-ico" ref="musicIco1">
-            <div className="icon-fe-music"></div>
+            <div className="icon-fe-music" />
           </div>
           <div className="music-ico" ref="musicIco2">
-            <div className="icon-fe-music"></div>
+            <div className="icon-fe-music" />
           </div>
           <div className="music-ico" ref="musicIco3">
-            <div className="icon-fe-music"></div>
+            <div className="icon-fe-music" />
           </div>
         </div>
       </CSSTransition>

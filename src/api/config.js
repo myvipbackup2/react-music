@@ -42,4 +42,15 @@ const OPTION = {
 
 const CODE_SUCCESS = 0;
 
-export { URL, PARAM, OPTION, CODE_SUCCESS };
+const SINGER_HOLDER_IMG = 'https://y.gtimg.cn/mediastyle/global/img/singer_300.png?max_age=2592000';
+
+const ALBUM_HOLDER_IMG = 'https://y.gtimg.cn/mediastyle/global/img/album_300.png?max_age=31536000';
+
+export {
+  URL,
+  PARAM,
+  OPTION,
+  CODE_SUCCESS,
+  SINGER_HOLDER_IMG,
+  ALBUM_HOLDER_IMG,
+};

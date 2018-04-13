@@ -4,7 +4,7 @@ import LazyLoad, { forceCheck } from "react-lazyload";
 import Scroll from "@/common/scroll/Scroll"
 import Loading from "@/common/loading/Loading"
 import { getRankingList } from "@/api/ranking"
-import { CODE_SUCCESS } from "@/api/config"
+import { CODE_SUCCESS, ALBUM_HOLDER_IMG } from "@/api/config"
 import * as RankingModel from "@/model/ranking"
 import RankingInfo from "@/containers/Ranking"
 import toHttps from '@/util/toHttps'
@@ -69,7 +69,14 @@ class Ranking extends React.Component {
                   >
                     <div className="left">
                       <LazyLoad height={100}>
-                        <img src={toHttps(ranking.img)} alt={ranking.title} />
+                        <img
+                          style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat center center` }}
+                          src={toHttps(ranking.img)}
+                          alt={ranking.title}
+                          onError={({ currentTarget }) => {
+                            currentTarget.src = ALBUM_HOLDER_IMG;
+                          }}
+                        />
                       </LazyLoad>
                     </div>
                     <div className="right">

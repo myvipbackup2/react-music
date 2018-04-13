@@ -8,13 +8,14 @@ import Album from "@/containers/Album"
 import Singer from "@/containers/Singer"
 import { getHotKey, search } from "@/api/search"
 import { getSongVKey } from "@/api/song"
-import { CODE_SUCCESS } from "@/api/config"
+import { CODE_SUCCESS, SINGER_HOLDER_IMG, ALBUM_HOLDER_IMG } from "@/api/config"
 import * as SingerModel from "@/model/singer"
 import * as AlbumModel from "@/model/album"
 import * as SongModel from "@/model/song"
 import debounce from '@/util/debounce'
 
 import "./search.styl"
+import toHttps from "../../util/toHttps";
 
 class Search extends React.Component {
 
@@ -268,8 +269,10 @@ class Search extends React.Component {
   }
 
   render() {
-    let album = this.state.album;
-    let singer = this.state.singer;
+    const album = this.state.album;
+    const singer = this.state.singer;
+    album.img = toHttps(album.img);
+    singer.img = toHttps(singer.img);
     return (
       <div className="music-search skin-search">
         <div className="search-box-wrapper skin-search-box-wrapper">
@@ -323,27 +326,51 @@ class Search extends React.Component {
           <Scroll ref={this.getScrollRef} scrollEnd={this.loadingMore}>
             <div>
               {/* 专辑 */}
-              <div className="album-wrapper" style={{ display: album.id ? "block" : "none" }}
-                   onClick={this.handleClick(album.mId, "album")}>
-                <div className="left">
-                  <img src={album.img} alt={album.name} />
-                </div>
-                <div className="right">
-                  <div className="song">{album.name}</div>
-                  <div className="singer">{album.singer}</div>
-                </div>
-              </div>
+              {
+                album.id && (
+                  <div
+                    className="album-wrapper"
+                    onClick={this.handleClick(album.mId, "album")}
+                  >
+                    <div className="left">
+                      <img
+                        src={album.img}
+                        alt={album.name}
+                        onError={({ currentTarget }) => {
+                          currentTarget.src = ALBUM_HOLDER_IMG;
+                        }}
+                      />
+                    </div>
+                    <div className="right">
+                      <div className="song">{album.name}</div>
+                      <div className="singer">{album.singer}</div>
+                    </div>
+                  </div>
+                )
+              }
               {/* 歌手 */}
-              <div className="singer-wrapper" style={{ display: singer.id ? "block" : "none" }}
-                   onClick={this.handleClick(singer.mId, "singer")}>
-                <div className="left">
-                  <img src={singer.img} alt={singer.name} />
-                </div>
-                <div className="right">
-                  <div className="singer">{singer.name}</div>
-                  <div className="info">单曲{singer.songnum} 专辑{singer.albumnum}</div>
-                </div>
-              </div>
+              {
+                singer.id && (
+                  <div
+                    className="singer-wrapper"
+                    onClick={this.handleClick(singer.mId, "singer")}
+                  >
+                    <div className="left">
+                      <img
+                        src={singer.img}
+                        alt={singer.name}
+                        onError={({ currentTarget }) => {
+                          currentTarget.src = SINGER_HOLDER_IMG;
+                        }}
+                      />
+                    </div>
+                    <div className="right">
+                      <div className="singer">{singer.name}</div>
+                      <div className="info">单曲{singer.songnum} 专辑{singer.albumnum}</div>
+                    </div>
+                  </div>
+                )
+              }
               {/* 歌曲列表 */}
               {
                 this.state.songs.map((song) => {

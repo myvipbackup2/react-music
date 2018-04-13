@@ -3,7 +3,7 @@ import { Route } from "react-router-dom"
 import LazyLoad, { forceCheck } from "react-lazyload"
 import Swiper from "swiper"
 import { getCarousel, getNewAlbum } from "@/api/recommend"
-import { CODE_SUCCESS } from "@/api/config"
+import { CODE_SUCCESS, ALBUM_HOLDER_IMG } from "@/api/config"
 import Album from "@/containers/Album"
 import Scroll from "@/common/scroll/Scroll"
 import Loading from "@/common/loading/Loading"
@@ -133,7 +133,16 @@ class Recommend extends React.Component {
         >
           <div className="left">
             <LazyLoad height={60}>
-              <img src={album.img} width="100%" height="100%" alt={album.name} />
+              <img
+                src={toHttps(album.img)}
+                width="100%"
+                height="100%"
+                alt={album.name}
+                style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat center center` }}
+                onError={({ currentTarget }) => {
+                  currentTarget.src = ALBUM_HOLDER_IMG;
+                }}
+              />
             </LazyLoad>
           </div>
           <div className="right">
@@ -164,7 +173,12 @@ class Recommend extends React.Component {
                     return (
                       <div className="swiper-slide" key={slider.id}>
                         <a className="slider-nav" onClick={this.toLink(toHttps(slider.linkUrl))}>
-                          <img src={toHttps(slider.picUrl)} width="100%" height="100%" alt="推荐" />
+                          <img
+                            src={toHttps(slider.picUrl)}
+                            width="100%"
+                            height="100%"
+                            alt="推荐"
+                          />
                         </a>
                       </div>
                     );

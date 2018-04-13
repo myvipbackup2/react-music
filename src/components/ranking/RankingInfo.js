@@ -11,6 +11,7 @@ import * as RankingModel from "@/model/ranking"
 import * as SongModel from "@/model/song"
 
 import "./rankinginfo.styl"
+import toHttps from "../../util/toHttps";
 
 class RankingInfo extends React.Component {
 
@@ -223,8 +224,8 @@ class RankingInfo extends React.Component {
   };
 
   render() {
-    let ranking = this.state.ranking;
-    let songs = this.state.songs.map((song, index) => {
+    const ranking = this.state.ranking;
+    const songs = this.state.songs.map((song, index) => {
       return (
         <div className="song" key={song.id} onClick={this.selectSong(song)}>
           <div className="song-index">{index + 1}</div>
@@ -233,6 +234,7 @@ class RankingInfo extends React.Component {
         </div>
       );
     });
+    ranking.img = toHttps(ranking.img);
     return (
       <CSSTransition in={this.state.show} timeout={300} classNames="translate">
         <div className="ranking-info">
