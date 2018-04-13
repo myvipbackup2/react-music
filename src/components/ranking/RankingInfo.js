@@ -246,8 +246,8 @@ class RankingInfo extends React.Component {
             <div ref={this.getRankingFixedBgRef} className="ranking-img fixed" style={{ backgroundImage: `url(${ranking.img})` }}>
               <div className="filter" />
             </div>
-            <div className="play-wrapper" ref={this.getPlayButtonWrapperRef}>
-              <div className="play-button" onClick={this.playAll}>
+            <div className="play-wrapper skin-play-wrapper" ref={this.getPlayButtonWrapperRef}>
+              <div className="play-button skin-play-wrapper" onClick={this.playAll}>
                 <i className="icon-play" />
                 <span>播放全部</span>
               </div>

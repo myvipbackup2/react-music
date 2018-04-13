@@ -33,10 +33,14 @@ skin.mangoYellow = {
   miniPlayerBgColor: "#FFFFFF",
   miniImgBorderColor: "#EEEEEE",
   miniProgressBarBgColor: "rgba(0, 0, 0, 0.1)",
-  miniRightColor: "#FFD700",
+  miniRightColor: "##ffd700",
   miniSongColor: "#333333",
   activeColor: "#FFA500",
   defaultPlayerImg: require('@/assets/imgs/music_yellow.png'),
+  /* 播放全部 */
+  playWrapperColor: '#ffd700',
+  playBtnBorderColor: '#ffd700',
+  playBtnBackgroundColor: 'transparent',
 };
 
 skin.coolBlack = {
@@ -67,6 +71,9 @@ skin.coolBlack = {
   miniSongColor: "#FFFFFF",
   activeColor: "#ffcd32",
   defaultPlayerImg: require('@/assets/imgs/music_yellow.png'),
+  playWrapperColor: '#ffd700',
+  playBtnBorderColor: '#ffd700',
+  playBtnBackgroundColor: 'transparent',
 };
 
 skin.kuGouBlue = {
@@ -76,6 +83,9 @@ skin.kuGouBlue = {
   searchTitleColor: "#2CA2F9",
   miniRightColor: "#2CA2F9",
   defaultPlayerImg: require('@/assets/imgs/music_blue.png'),
+  playWrapperColor: '#fff',
+  playBtnBorderColor: '#2CA2F9',
+  playBtnBackgroundColor: '#2CA2F9',
 };
 
 skin.netBaseRed = {
@@ -85,6 +95,9 @@ skin.netBaseRed = {
   searchTitleColor: "#D43C33",
   miniRightColor: "#D43C33",
   defaultPlayerImg: require('@/assets/imgs/music_red.png'),
+  playWrapperColor: '#fff',
+  playBtnBorderColor: '#D43C33',
+  playBtnBackgroundColor: '#D43C33',
 };
 
 skin.qqGreen = {
@@ -94,6 +107,9 @@ skin.qqGreen = {
   searchTitleColor: "#31C27C",
   miniRightColor: "#31C27C",
   defaultPlayerImg: require('@/assets/imgs/music_green.png'),
+  playWrapperColor: '#fff',
+  playBtnBorderColor: '#31C27C',
+  playBtnBackgroundColor: '#31C27C',
 };
 
 const getSkinStyle = (skin) => {
@@ -182,7 +198,7 @@ const getSkinStyle = (skin) => {
     .skin-mini-player .progress-bar {
       background-color: ${skin.miniProgressBarBgColor} !important;
     }
-    .skin-mini-player .progress {
+    .skin-mini-player .progress, .progress-bar .progress, .progress-bar .progress-button {
       background-color: ${skin.miniRightColor} !important;
     }
     .skin-mini-player .player-right {
@@ -200,6 +216,13 @@ const getSkinStyle = (skin) => {
     .nav-link.active span {
       color: ${skin.activeColor} !important;
       border-bottom: 2px solid ${skin.activeColor};
+    }
+    .skin-play-wrapper.play-wrapper {
+      color: ${skin.playWrapperColor} !important;
+    }
+    .skin-play-wrapper.play-wrapper .skin-play-wrapper.play-button {
+      border-color: ${skin.playBtnBorderColor};
+      background-color: ${skin.playBtnBackgroundColor};
     }
   `;
 };

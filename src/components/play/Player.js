@@ -350,7 +350,7 @@ class Player extends React.Component {
                     {getTime(song.duration)}
                   </span>
                 </div>
-                <div className="play-wrapper">
+                <div className="play-wrapper skin-play-wrapper">
                   <div className="play-model-button" onClick={this.changePlayMode}>
                     <i className={"icon-" + this.playModes[this.state.currentPlayMode] + "-play"} />
                   </div>
