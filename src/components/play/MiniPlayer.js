@@ -1,7 +1,14 @@
 import React from "react"
 import Progress from "./Progress"
+import { skin } from '@/util/skin'
+import { connect } from 'react-redux'
 
 import "./miniplayer.styl"
+import toHttps from "../../util/toHttps";
+
+const mapStateToProps = ({ skin }) => ({
+  currentSkin: skin,
+});
 
 class MiniPlayer extends React.Component {
 
@@ -29,13 +36,15 @@ class MiniPlayer extends React.Component {
 
   render() {
     const song = this.props.song;
+    song.img = toHttps(song.img);
 
     let playerStyle = {};
     if (this.props.showStatus) {
       playerStyle = { display: "none" };
     }
-    if (!song.img) {
-      song.img = require("@/assets/imgs/music.png");
+
+    if (!song.img || song.img.startsWith('data:image')) {
+      song.img = skin[this.props.currentSkin].defaultPlayerImg;
     }
 
     let imgStyle = {};
@@ -74,4 +83,4 @@ class MiniPlayer extends React.Component {
   }
 }
 
-export default MiniPlayer
+export default connect(mapStateToProps)(MiniPlayer);

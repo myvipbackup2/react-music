@@ -35,7 +35,8 @@ skin.mangoYellow = {
   miniProgressBarBgColor: "rgba(0, 0, 0, 0.1)",
   miniRightColor: "#FFD700",
   miniSongColor: "#333333",
-  activeColor: "#FFA500"
+  activeColor: "#FFA500",
+  defaultPlayerImg: require('@/assets/imgs/music_yellow.png'),
 };
 
 skin.coolBlack = {
@@ -64,31 +65,38 @@ skin.coolBlack = {
   miniProgressBarBgColor: "rgba(0, 0, 0, 0.3)",
   miniRightColor: "#ffcd32",
   miniSongColor: "#FFFFFF",
-  activeColor: "#ffcd32"
+  activeColor: "#ffcd32",
+  defaultPlayerImg: require('@/assets/imgs/music_yellow.png'),
 };
 
-skin.kuGouBlue = Object.assign({}, skin.mangoYellow, {
+skin.kuGouBlue = {
+  ...skin.mangoYellow,
   appHeaderBgColor: "#2CA2F9",
   activeColor: "#2CA2F9",
   searchTitleColor: "#2CA2F9",
-  miniRightColor: "#2CA2F9"
-});
+  miniRightColor: "#2CA2F9",
+  defaultPlayerImg: require('@/assets/imgs/music_blue.png'),
+};
 
-skin.netBaseRed = Object.assign({}, skin.mangoYellow, {
+skin.netBaseRed = {
+  ...skin.mangoYellow,
   appHeaderBgColor: "#D43C33",
   activeColor: "#D43C33",
   searchTitleColor: "#D43C33",
-  miniRightColor: "#D43C33"
-});
+  miniRightColor: "#D43C33",
+  defaultPlayerImg: require('@/assets/imgs/music_red.png'),
+};
 
-skin.qqGreen = Object.assign({}, skin.mangoYellow, {
+skin.qqGreen = {
+  ...skin.mangoYellow,
   appHeaderBgColor: "#31C27C",
   activeColor: "#31C27C",
   searchTitleColor: "#31C27C",
-  miniRightColor: "#31C27C"
-});
+  miniRightColor: "#31C27C",
+  defaultPlayerImg: require('@/assets/imgs/music_green.png'),
+};
 
-let getSkinStyle = (skin) => {
+const getSkinStyle = (skin) => {
   if (!skin) {
     return "";
   }
@@ -196,7 +204,7 @@ let getSkinStyle = (skin) => {
   `;
 };
 
-let setSkinStyle = (skin) => {
+const setSkinStyle = (skin) => {
   let styleText = getSkinStyle(skin);
   let oldStyle = document.getElementById("skin");
   const style = document.createElement("style");
@@ -206,7 +214,14 @@ let setSkinStyle = (skin) => {
   oldStyle ? document.head.replaceChild(style, oldStyle) : document.head.appendChild(style);
 };
 
-// 设置皮肤
-setSkinStyle(skin[localStorage.getSkin()]);
+// 当前皮肤
+const currentSkin = skin[localStorage.getSkin()];
 
-export { skin, setSkinStyle }
+// 设置皮肤
+setSkinStyle(currentSkin);
+
+export {
+  skin,
+  setSkinStyle,
+  currentSkin,
+}

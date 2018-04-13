@@ -374,9 +374,13 @@ class Search extends React.Component {
               }
               {/* 歌曲列表 */}
               {
-                this.state.songs.map((song) => {
+                this.state.songs.map((song, index) => {
                   return (
-                    <div className="song-wrapper" key={song.id} onClick={this.handleClick(song, "song")}>
+                    <div
+                      className="song-wrapper"
+                      key={song.id + song.name + song.singer + index}
+                      onClick={this.handleClick(song, "song")}
+                    >
                       <div className="left">
                         <i className="icon-fe-music" />
                       </div>

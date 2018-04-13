@@ -4,6 +4,7 @@ import Progress from "./Progress"
 import MiniPlayer from "./MiniPlayer"
 import { Song } from "@/model/song"
 import toHttps from '@/util/toHttps'
+import { ALBUM_HOLDER_IMG } from "@/api/config"
 
 import "./player.styl"
 
@@ -282,7 +283,8 @@ class Player extends React.Component {
     }
 
     const song = this.currentSong;
-    const playBg = song.img ? toHttps(song.img) : require("@/assets/imgs/play_bg.jpg");
+    const defaultBg = require("@/assets/imgs/play_bg.jpg");
+    const playBg = song.img ? toHttps(song.img) : defaultBg;
 
     // 播放按钮样式
     const playButtonClass = this.state.playStatus ? "icon-pause" : "icon-play";
@@ -323,6 +325,10 @@ class Player extends React.Component {
                   onLoad={() => {
                     /* 图片加载完成后设置背景，防止图片加载过慢导致没有背景 */
                     this.playerBgDOM.style.backgroundImage = `url("${playBg}")`;
+                  }}
+                  onError={({ currentTarget }) => {
+                    currentTarget.src = ALBUM_HOLDER_IMG;
+                    this.playerBgDOM.style.backgroundImage = `url("${defaultBg}")`
                   }}
                 />
               </div>

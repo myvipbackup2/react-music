@@ -70,9 +70,9 @@ class Ranking extends React.Component {
                     <div className="left">
                       <LazyLoad height={100}>
                         <img
-                          style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat center center` }}
                           src={toHttps(ranking.img)}
                           alt={ranking.title}
+                          style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat center center` }}
                           onError={({ currentTarget }) => {
                             currentTarget.src = ALBUM_HOLDER_IMG;
                           }}
