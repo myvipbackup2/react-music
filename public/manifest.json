@@ -1,15 +1,30 @@
 {
-  "short_name": "React Music App",
+  "short_name": "LZX音乐",
   "name": "A pwd music webApp made by lzx",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "./logo/48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "./logo/64x64.svg",
+      "sizes": "64x64",
+      "type": "image/svg"
+    },
+    {
+      "src": "./logo/128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
     }
   ],
-  "start_url": "./index.html",
-  "display": "standalone",
+  "start_url": "./index.html?from=homescreen",
+  "display": "fullscreen",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#d43c33"
 }
