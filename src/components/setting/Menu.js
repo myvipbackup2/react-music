@@ -27,7 +27,7 @@ class Menu extends React.Component {
   };
 
   getBottomRef = ref => {
-    this.button = ref;
+    this.bottom = ref;
   };
 
   render() {

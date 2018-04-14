@@ -336,7 +336,7 @@ class Search extends React.Component {
                       <img
                         src={album.img}
                         alt={album.name}
-                        style={{ background: `url(${SINGER_HOLDER_IMG}) no-repeat center center` }}
+                        style={{ background: `url(${SINGER_HOLDER_IMG}) no-repeat`, backgroundSize: 'contain' }}
                         onError={({ currentTarget }) => {
                           currentTarget.src = ALBUM_HOLDER_IMG;
                         }}

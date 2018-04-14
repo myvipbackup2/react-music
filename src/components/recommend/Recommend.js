@@ -138,7 +138,7 @@ class Recommend extends React.Component {
                 width="100%"
                 height="100%"
                 alt={album.name}
-                style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat center center` }}
+                style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat`, backgroundSize: 'contain' }}
                 onError={({ currentTarget }) => {
                   currentTarget.src = ALBUM_HOLDER_IMG;
                 }}

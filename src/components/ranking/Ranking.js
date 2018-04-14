@@ -29,8 +29,8 @@ class Ranking extends React.Component {
       const { code, data } = res;
       if (code === CODE_SUCCESS) {
         const topList = [];
-        data.topList.forEach(({ topTitle = '' }) => {
-          if (/MV/i.test(topTitle)) {
+        data.topList.forEach((item) => {
+          if (/MV/i.test(item.topTitle)) {
             return;
           }
           topList.push(RankingModel.createRankingByList(item));
@@ -74,7 +74,7 @@ class Ranking extends React.Component {
                         <img
                           src={toHttps(ranking.img)}
                           alt={ranking.title}
-                          style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat center center` }}
+                          style={{ background: `url(${ALBUM_HOLDER_IMG}) no-repeat`, backgroundSize: 'contain' }}
                           onError={({ currentTarget }) => {
                             currentTarget.src = ALBUM_HOLDER_IMG;
                           }}

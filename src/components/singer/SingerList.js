@@ -183,7 +183,7 @@ class SingerList extends React.Component {
                 width="100%"
                 height="100%"
                 alt={singer.name}
-                style={{ background: `url(${SINGER_HOLDER_IMG}) no-repeat center center` }}
+                style={{ background: `url(${SINGER_HOLDER_IMG}) no-repeat`, backgroundSize: 'contain' }}
                 onError={({ currentTarget }) => {
                   currentTarget.src = SINGER_HOLDER_IMG;
                 }}
